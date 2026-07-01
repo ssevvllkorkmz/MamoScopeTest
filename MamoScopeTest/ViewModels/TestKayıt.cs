@@ -144,8 +144,6 @@ namespace MamoScopeTest.ViewModels
 
             var yeniSayfa = new ViewTests();
            
-
-            
             var mainWindow = Application.Current.MainWindow;
             if (mainWindow != null && mainWindow.DataContext is MainWindowViewModel mainVM)
             {

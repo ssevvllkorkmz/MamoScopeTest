@@ -21,6 +21,17 @@ namespace MamoScopeTest.ViewModels
             set { _gecmisTestler = value; OnPropertyChanged(nameof(GecmisTestler)); }
         }
 
+        private bool _isLoading;
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set
+            {
+                _isLoading = value;
+                OnPropertyChanged(nameof(IsLoading));
+            }
+        }
+
 
         public ICommand YeniTestCommand { get; set; }
 
@@ -33,23 +44,26 @@ namespace MamoScopeTest.ViewModels
         }
 
 
-        private void VerileriVeritabanindanYukle()
+        private async void VerileriVeritabanindanYukle()
         {
+            IsLoading = true; 
             try
             {
-                using (var db = new AppDbContext())
+                
+                var sqlVerileri = await Task.Run(() =>
                 {
-                    var sqlVerileri = db.MotorDriver.ToList();
-
-                    
-                    GecmisTestler = new ObservableCollection<MamoScopeTest.Models.MotorDriver>(sqlVerileri);
-                }
+                    using (var db = new AppDbContext())
+                    {
+                        return db.MotorDriver.ToList();
+                    }
+                });
+                GecmisTestler = new ObservableCollection<MamoScopeTest.Models.MotorDriver>(sqlVerileri);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Veritabanından veriler yüklenirken bir hata oluştu: {ex.Message}");
+                MessageBox.Show($"Veri yükleme hatası: {ex.Message}");
             }
-
+            finally { IsLoading = false; }
         }
         public void KayıtSayfasınıAc()
         {

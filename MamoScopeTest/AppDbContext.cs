@@ -17,8 +17,8 @@ namespace MamoScopeTest
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=MamoScopeDB;Trusted_Connection=True;TrustServerCertificate=True;");
+
+            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=MamoScopeDb;Trusted_Connection=True;TrustServerCertificate=True;");
         }
     }
 }
