@@ -17,7 +17,7 @@ namespace MamoScopeTest
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            // Senin bağlandığın sunucu adresini ve yeni oluşacak veritabanı adını veriyoruz
+            
             optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=MamoScopeDB;Trusted_Connection=True;TrustServerCertificate=True;");
         }
     }

@@ -49,7 +49,7 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Column="0" Text="{Binding SerialNumber}" FontSize="16" Foreground="DimGray" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
-                            <TextBlock Grid.Column="1" Text="{Binding Voltage, StringFormat='{}{0} V'}" FontSize="16" Foreground="DimGray" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Voltage, Mode=TwoWay, TargetNullValue='', StringFormat={}{0:#.##}}" FontSize="16" Foreground="DimGray" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
                             <TextBlock Grid.Column="2" Text="{Binding TestDate, StringFormat=\{0:dd.MM.yyyy HH:mm\}}" FontSize="16" Foreground="DimGray" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
 
                             <TextBlock Grid.Column="3" FontSize="16" FontWeight="Medium" VerticalAlignment="Center" Margin="10,0,0,0">

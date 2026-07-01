@@ -27,6 +27,10 @@
 
         <Button x:Name="GecmisTestler" Content="Geçmiş Testleri Görüntüle" Command="{Binding GecmisTestlerCommand}" FontSize="18" HorizontalAlignment="Left" Height="44" Margin="10,290,0,0" VerticalAlignment="Top" Width="240"/>
         <Button x:Name="TestEt" Content="Test Et" Command="{Binding TestEtCommand}" FontSize="18" HorizontalAlignment="Left" Height="44" Margin="274,290,0,0" VerticalAlignment="Top" Width="126" />
+        <Button Content="Test Verisi Simüle Et" 
+        Command="{Binding SimuleEtCommand}" 
+        Height="40" Width="200" FontSize="16" FontWeight="Bold" 
+        Background="LightBlue" Margin="130,358,470,52"/>
 
     </Grid>
 </UserControl>
