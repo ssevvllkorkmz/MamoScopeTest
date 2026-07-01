@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace MamoScopeTest // Kendi proje adınla aynı olmalı
+namespace MamoScopeTest 
 {
     public class RelayCommand : ICommand
     {
