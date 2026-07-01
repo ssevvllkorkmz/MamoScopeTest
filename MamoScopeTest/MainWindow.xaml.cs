@@ -22,6 +22,11 @@ namespace MamoScopeTest
         {
             InitializeComponent();
             this.DataContext = new MainWindowViewModel();
+
+            using (var db = new AppDbContext())
+            {
+                db.Database.EnsureCreated();
+            }
         }
     }
 }
