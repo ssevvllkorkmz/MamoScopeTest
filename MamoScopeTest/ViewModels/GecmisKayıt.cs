@@ -21,6 +21,7 @@ namespace MamoScopeTest.ViewModels
             set { _gecmisTestler = value; OnPropertyChanged(nameof(GecmisTestler)); }
         }
 
+
         public ICommand YeniTestCommand { get; set; }
 
         public GecmisKayıtViewModel()
@@ -48,6 +49,7 @@ namespace MamoScopeTest.ViewModels
             {
                 MessageBox.Show($"Veritabanından veriler yüklenirken bir hata oluştu: {ex.Message}");
             }
+
         }
         public void KayıtSayfasınıAc()
         {

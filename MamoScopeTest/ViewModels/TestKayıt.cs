@@ -42,6 +42,17 @@ namespace MamoScopeTest.ViewModels
             get => _testSonucu;
             set { _testSonucu = value; OnPropertyChanged(nameof(TestSonucu)); }
         }
+
+        private bool _isLoading;
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set
+            {
+                _isLoading = value;
+                OnPropertyChanged(nameof(IsLoading));
+            }
+        }
         public ICommand SimuleEtCommand { get; set; }
         public ICommand TestEtCommand { get; set; }
         public ICommand GecmisTestlerCommand { get; set; }
@@ -60,25 +71,28 @@ namespace MamoScopeTest.ViewModels
 
         private void VoltajTest()
         {
-
-            string temizVoltajMetni = VoltajDegeri?.Replace('.', ',') ?? "0";
-
-          
-            double gercekVoltaj = 0;
+            
+            if (string.IsNullOrEmpty(VoltajDegeri) || string.IsNullOrEmpty(SeriNumarası))
+            {
+                System.Windows.MessageBox.Show("Lütfen önce voltaj ve seri numarası girin veya simüle edin!");
+                return;
+            }
 
             
+            string temizVoltajMetni = VoltajDegeri?.Replace('.', ',') ?? "0";
+            double gercekVoltaj = 0;
             double.TryParse(temizVoltajMetni, out gercekVoltaj);
 
             bool BasariliMi = false;
 
             if (gercekVoltaj >= 23.5 && gercekVoltaj <= 24.5)
             {
-                TestSonucu = $"BAŞARILI";
+                TestSonucu = "BAŞARILI";
                 BasariliMi = true;
             }
             else
             {
-                TestSonucu = $"BAŞARISIZ";
+                TestSonucu = "BAŞARISIZ";
                 BasariliMi = false;
             }
 
@@ -90,22 +104,20 @@ namespace MamoScopeTest.ViewModels
                 IsPassed = BasariliMi
             };
 
-            using (var db = new AppDbContext())
+            
+            try
             {
-                db.MotorDriver.Add(yeniKayit);
-                db.SaveChanges();
+                using (var db = new AppDbContext())
+                {
+                    db.MotorDriver.Add(yeniKayit);
+                    db.SaveChanges();
+                }
+
+                System.Windows.MessageBox.Show($"Test Sonuçlandırıldı!\nSeri No: {SeriNumarası}\nVoltaj: {gercekVoltaj}V\nSonuç: {TestSonucu}");
             }
-
-        }
-
-        private void GecmisKayıtlarıAc()
-        {
-            var mainWindow = Application.Current.MainWindow;
-
-            if (mainWindow != null && mainWindow.DataContext is MainWindowViewModel mainVM)
+            catch (Exception ex)
             {
-                
-                mainVM.CurrentView = new ViewTests();
+                System.Windows.MessageBox.Show($"Veri tabanı hatası: {ex.Message}\n\nLütfen SQL Server bağlantınızı veya AppDbContext dosyasındaki ConnectionString'i kontrol edin.");
             }
         }
 
@@ -113,48 +125,38 @@ namespace MamoScopeTest.ViewModels
         {
             Random rnd = new Random();
 
-            
-            int rastgeleSayi = rnd.Next(1000, 9999); 
-            string uretilenSeriNo = $"OPT-DRV-{rastgeleSayi}";
+            int rastgeleSayi = rnd.Next(1000, 9999);
+            SeriNumarası = $"OPT-DRV-{rastgeleSayi}";
 
-          
             double uretilenVoltaj = 20.0 + (rnd.NextDouble() * 6.0);
             uretilenVoltaj = Math.Round(uretilenVoltaj, 1);
+            VoltajDegeri = uretilenVoltaj.ToString();
+
+            TestSonucu = "";
+        }
+
+        private async void GecmisKayıtlarıAc()
+        {
+            
+            IsLoading = true;
+
+            await Task.Delay(50);
+
+            var yeniSayfa = new ViewTests();
+           
 
             
-            bool basariliMi = false;
-            if (uretilenVoltaj >= 23.5 && uretilenVoltaj <= 24.5)
+            var mainWindow = Application.Current.MainWindow;
+            if (mainWindow != null && mainWindow.DataContext is MainWindowViewModel mainVM)
             {
-                TestSonucu = "BAŞARILI";
-                basariliMi = true;
-            }
-            else
-            {
-                TestSonucu = "BAŞARISIZ";
-                basariliMi = false;
+                mainVM.CurrentView = yeniSayfa;
             }
 
-           
-            SeriNumarası = uretilenSeriNo;
-            VoltajDegeri = uretilenVoltaj.ToString(); 
-
-           
-            var yeniKayit = new MotorDriver
-            {
-                SerialNumber = uretilenSeriNo,
-                Voltage = uretilenVoltaj,
-                TestDate = DateTime.Now,
-                IsPassed = basariliMi
-            };
-
-            using (var db = new AppDbContext())
-            {
-                db.MotorDriver.Add(yeniKayit);
-                db.SaveChanges();
-            }
-
-            System.Windows.MessageBox.Show($"Simülasyon Tamamlandı!\nSeri No: {uretilenSeriNo}\nVoltaj: {uretilenVoltaj}V\nSonuç: {TestSonucu}");
+            
+            IsLoading = false;
         }
+
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
